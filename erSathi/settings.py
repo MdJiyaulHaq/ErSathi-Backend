@@ -60,6 +60,7 @@ if DEBUG:
 
 LOCAL_APPS = [
     "core.apps.CoreConfig",
+    "courses.apps.CoursesConfig",
     "disciplines.apps.DisciplinesConfig",
     "subjects.apps.SubjectsConfig",
     "study_materials.apps.StudyMaterialsConfig",
