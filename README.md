@@ -1,128 +1,85 @@
-# ErSathi Backend
+# ErSathi Learning Platform
 
-ErSathi is a comprehensive backend system built with Django and Django REST framework, designed to manage educational assessments, user progress tracking, and gamification features. The system provides a robust API for integrating with frontend applications.
+An open source preparation platform built with Django REST API for online learning with course management, student enrollments, and progress tracking.
 
-## Project Overview
+## Tech Stack
 
-This project provides the following key features:
+- **Backend:** Django 5.2 + DRF 3.16
+- **Database:** PostgreSQL 17
+- **Async:** Celery 5.4 + Redis
+- **Auth:** JWT (djoser + simplejwt)
+- **Docs:** Swagger UI at `/api/docs/`
 
-- User authentication and authorization
-- Exam/Assessment management system
-- Study materials management
-- Progress tracking for students
-- Gamification elements (badges and likes)
-- Tagging system for organizing content
-- Discipline-based content organization
-- Question bank management
-
-## Getting Started
-
-To set up the project locally, follow these steps:
-
-1. Clone the repository:
+## Quick Start
 
 ```bash
+# Clone and configure
 git clone https://github.com/MdJiyaulHaq/ersathi-backend.git
 cd ersathi-backend
-```
+cp .env.example .env  # Edit with your settings
 
-2. Copy the example environment file and adjust values if needed:
-
-```bash
-cp .env.example .env
-```
-
-3. Build and start the containers:
-
-```bash
+# Start all services (web, db, redis, celery)
 docker-compose -f docker-compose.local.yml up --build
+
+# Create admin user
+docker-compose -f docker-compose.local.yml exec web python manage.py createsuperuser
 ```
 
-The application will be available at `http://localhost:8000`
-
-## Project Structure
-
-The project is organized into several Django apps:
-
-- **core**: Core user models and authentication
-- **assessments**: Exam and assessment management
-- **disciplines**: Discipline-based content organization
-- **gamification**: Badge and achievement system
-- **likes**: Voting system for content
-- **progress**: Student progress tracking
-- **questions**: Question bank management
-- **study_materials**: Study materials and resources
-- **subjects**: Subject management
-- **tags**: Tagging system
+**Access:**
+- Admin: http://localhost:8000/admin/
+- Docs: http://localhost:8000/api/docs/
 
 ## Features
 
-### Users & Authentication
+- **Role-based access:** Students and Instructors with distinct permissions
+- **Course management:** Draft/published states, ordered lessons
+- **Progress tracking:** Lesson completions with percentage calculations
+- **Async processing:** Celery tasks triggered on course completion
 
-- User registration and login
-- Role-based access control
-- Student and educator profiles
+## API Endpoints
 
-### Exams & Assessments
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/users/` | Register |
+| POST | `/auth/jwt/create/` | Login |
+| POST | `/auth/jwt/refresh/` | Refresh token |
 
-- Create and manage exams
-- Multiple question types support
-- Exam attempts and results tracking
+### Courses & Lessons (Instructors)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/courses/` | Create course |
+| PATCH | `/courses/{id}/` | Update course |
+| POST | `/courses/{id}/lessons/` | Add lesson |
 
-### Study Materials
+### Enrollments (Students)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/courses/` | Browse published courses |
+| POST | `/enrollments/` | Enroll in course |
+| POST | `/enrollments/{id}/complete-lesson/` | Complete lesson |
+| GET | `/enrollments/{id}/progress/` | View progress |
 
-- Upload and manage study resources
-- Organize by subjects and disciplines
-- Access control for materials
-
-### Progress Tracking
-
-- Track student progress
-- Generate progress reports
-- Set learning goals
-
-### Gamification
-
-- Earn badges based on achievements
-- Leaderboard system
-- Points system
-
-## Live Demo
-
-Live at: [http://150.230.12.113:8000](http://150.230.12.113:8000)
-Coming soon: [https://api.ersathi.com](https://api.ersathi.com)
-
-### API Documentation
-
-The API documentation is automatically generated using drf-spectacular and can be accessed at: [http://150.230.12.113:8000/api/docs/](http://150.230.12.113:8000/api/docs/)
-
-## Linting and Running Tests
-
-To run linters and tests, you can use the following commands:
+## Testing
 
 ```bash
-docker compose run --rm web sh -c "flake8"
-docker compose run --rm web sh -c "pytest"
+docker-compose -f docker-compose.local.yml exec web python manage.py test courses
 ```
 
-## Contributing
+## Project Structure
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-For major changes or features, please open an issue to discuss your proposal first.
-
-If your contribution requires authentication (e.g., API token), please contact the maintainers to receive a development token for local testing.
-
-## Maintainers
-
-- Md Jiyaul Haq ([https://github.com/MdJiyaulHaq](https://github.com/MdJiyaulHaq))
+```
+├── core/           # User model with roles
+├── courses/        # Course, Lesson, Enrollment, LessonCompletion
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── permissions.py
+│   ├── tasks.py    # Celery async tasks
+│   └── tests.py
+└── erSathi/        # Django settings & Celery config
+```
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contributors
+MIT
