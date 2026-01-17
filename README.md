@@ -18,6 +18,9 @@ git clone https://github.com/MdJiyaulHaq/ersathi-backend.git
 cd ersathi-backend
 cp .env.example .env  # Edit with your settings
 
+# Switch to new/ole-assignment branch
+git checkout new/ole-assignment
+
 # Start all services (web, db, redis, celery)
 docker-compose -f docker-compose.local.yml up --build
 
