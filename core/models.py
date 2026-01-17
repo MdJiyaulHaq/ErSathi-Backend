@@ -11,6 +11,10 @@ from disciplines.models import Discipline
 
 
 class User(AbstractUser):
+    class Role(models.TextChoices):
+        STUDENT = "STUDENT", _("Student")
+        INSTRUCTOR = "INSTRUCTOR", _("Instructor")
+
     username = models.CharField(
         _("username"),
         max_length=150,
@@ -24,6 +28,13 @@ class User(AbstractUser):
         },
     )
     email = models.EmailField(_("email address"), unique=True)
+    role = models.CharField(
+        _("role"),
+        max_length=20,
+        choices=Role.choices,
+        default=Role.STUDENT,
+        help_text=_("User role: Student or Instructor"),
+    )
     date_joined = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = "email"
@@ -33,6 +44,14 @@ class User(AbstractUser):
         verbose_name = _("user")
         verbose_name_plural = _("users")
         ordering = ["-date_joined"]
+
+    @property
+    def is_student(self):
+        return self.role == self.Role.STUDENT
+
+    @property
+    def is_instructor(self):
+        return self.role == self.Role.INSTRUCTOR
 
     def __str__(self):
         return f"{self.get_full_name()} ({self.email})"
