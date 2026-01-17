@@ -1,6 +1,6 @@
-# erSathi Backend
+# ErSathi Backend
 
-erSathi is a comprehensive backend system built with Django and Django REST framework, designed to manage educational assessments, user progress tracking, and gamification features. The system provides a robust API for integrating with frontend applications.
+ErSathi is a comprehensive backend system built with Django and Django REST framework, designed to manage educational assessments, user progress tracking, and gamification features. The system provides a robust API for integrating with frontend applications.
 
 ## Project Overview
 
