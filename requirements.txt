@@ -31,6 +31,10 @@ pillow==11.1.0
 # Production Server
 gunicorn==23.0.0
 
+# Async Task Queue
+celery==5.4.0
+redis==5.2.1
+
 # Security & Dependencies
 cryptography==44.0.3
 oauthlib==3.2.2
